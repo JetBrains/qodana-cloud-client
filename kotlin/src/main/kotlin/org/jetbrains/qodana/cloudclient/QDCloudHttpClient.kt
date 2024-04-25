@@ -1,0 +1,49 @@
+package org.jetbrains.qodana.cloudclient
+
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import org.jetbrains.qodana.cloudclient.impl.QDCloudHttpClientImpl
+import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
+import java.net.http.HttpClient
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+
+interface QDCloudHttpClient {
+    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
+    suspend fun doRequest(
+        host: String,
+        path: String,
+        method: QDCloudRequestMethod,
+        headers: Map<String, String> = emptyMap(),
+        token: String?,
+    ): QDCloudResponse<String>
+}
+
+fun QDCloudHttpClient(
+    client: HttpClient,
+    backoffRetries: Int = 3,
+    backoffExponentialBase: Double = 2.0,
+    timeout: Duration = 30.seconds,
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+): QDCloudHttpClient {
+    return QDCloudHttpClientImpl(
+        client,
+        backoffRetries,
+        backoffExponentialBase,
+        timeout,
+        ioDispatcher
+    )
+}
+
+suspend inline fun <reified T> QDCloudHttpClient.request(
+    host: String,
+    path: String,
+    method: QDCloudRequestMethod,
+    headers: Map<String, String> = emptyMap(),
+    token: String?,
+): QDCloudResponse<T> {
+    return qodanaCloudResponse {
+        val content = doRequest(host, path, method, headers, token).value()
+        QDCloudJson.decodeFromString<T>(content)
+    }
+}
