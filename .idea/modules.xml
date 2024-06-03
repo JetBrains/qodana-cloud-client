@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/qodana-cloud-client.iml" filepath="$PROJECT_DIR$/.idea/qodana-cloud-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qodana-cloud-kotlin-client.iml" filepath="$PROJECT_DIR$/.idea/modules/qodana-cloud-kotlin-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qodana-cloud-kotlin-client.main.iml" filepath="$PROJECT_DIR$/.idea/modules/qodana-cloud-kotlin-client.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/qodana-cloud-kotlin-client.test.iml" filepath="$PROJECT_DIR$/.idea/modules/qodana-cloud-kotlin-client.test.iml" />
     </modules>
   </component>
 </project>

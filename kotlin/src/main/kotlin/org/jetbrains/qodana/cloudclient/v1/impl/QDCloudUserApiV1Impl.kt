@@ -10,16 +10,19 @@ import org.jetbrains.qodana.cloudclient.v1.*
 import java.time.Instant
 
 internal class QDCloudUserApiV1Impl(
-    override val minorVersion: Int,
+    override val versionNumber: Int,
     private val host: String,
     private val httpClient: QDCloudHttpClient,
     private val tokenProvider: QDCloudUserTokenProvider
 ) : QDCloudUserApiV1 {
+    override val base: QDCloudUserApiV1
+        get() = this
+
     override val v3: QDCloudUserApiV1.V3?
-        get() = if (minorVersion >= 3) V3Impl(this) else null
+        get() = if (versionNumber >= 3) V3Impl(this) else null
 
     override val v5: QDCloudUserApiV1.V5?
-        get() = if (minorVersion >= 5) V5Impl(v3!!) else null
+        get() = if (versionNumber >= 5) V5Impl(v3!!) else null
 
     override suspend fun getUserLicenses(): QDCloudResponse<QDCloudSchema.UserLicenses> {
         return request("users/me/licenses", QDCloudRequestMethod.GET())
@@ -128,8 +131,18 @@ internal class QDCloudUserApiV1Impl(
         }
     }
 
-    private class V3Impl(base: QDCloudUserApiV1) : QDCloudUserApiV1.V3, QDCloudUserApiV1 by base
+    private class V3Impl(
+        val baseImpl: QDCloudUserApiV1
+    ) : QDCloudUserApiV1.V3, QDCloudUserApiV1Versions by baseImpl {
+        override val v3: QDCloudUserApiV1.V3
+            get() = this
+    }
 
-    private class V5Impl(base: QDCloudUserApiV1.V3) : QDCloudUserApiV1.V5, QDCloudUserApiV1.V3 by base
+    private class V5Impl(
+        val baseImpl: QDCloudUserApiV1.V3
+    ) : QDCloudUserApiV1.V5, QDCloudUserApiV1Versions.V3 by baseImpl {
+        override val v5: QDCloudUserApiV1.V5
+            get() = this
+    }
 }
 

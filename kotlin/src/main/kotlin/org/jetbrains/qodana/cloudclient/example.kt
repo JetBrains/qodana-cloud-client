@@ -24,12 +24,12 @@ private suspend fun processUserName(client: QDCloudClient) {
         when {
             v5 != null -> {
                 // v5-specific call v5.xxx().value()
-                // here you can access APIs: (v1, v1.3, v1.5)
+                // here you can access APIs: (v1, v1.3, v1.5) like this: v5.v3.xxx(), v5.versions.base.xxx()
                 "user name from V5"
             }
             v3 != null -> {
                 // v3-specific call v3.xxx().value()
-                // here you can access APIs: (v1, v1.3)
+                // here you can access APIs: (v1, v1.3) like this: v3.versions.base.xxx()
                 "user name from V3"
             }
             else -> {
@@ -59,12 +59,12 @@ private suspend fun processProjectName(client: QDCloudClient) {
         when {
             v5 != null -> {
                 // v5-specific call v5.xxx().value()
-                // here you can access APIs: (v1, v1.3, v1.5)
+                // here you can access APIs: (v1, v1.3, v1.5) like this: v5.v3.xxx(), v5.base.xxx()
                 "project name from V5"
             }
             v3 != null -> {
                 // v3-specific call v3.xxx().value()
-                // here you can access APIs: (v1, v1.3)
+                // here you can access APIs: (v1, v1.3) like this: v3.base.xxx()
                 "project name from V3"
             }
             else -> {

@@ -5,21 +5,22 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import org.jetbrains.qodana.cloudclient.*
 import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
-import org.jetbrains.qodana.cloudclient.v1.QDCloudNotAuthorizedApiV1
-import org.jetbrains.qodana.cloudclient.v1.QDCloudSchema
-import org.jetbrains.qodana.cloudclient.v1.request
+import org.jetbrains.qodana.cloudclient.v1.*
 import java.time.Instant
 
 internal class QDCloudNotAuthorizedApiV1Impl(
-    override val minorVersion: Int,
+    override val versionNumber: Int,
     private val host: String,
     private val httpClient: QDCloudHttpClient
 ) : QDCloudNotAuthorizedApiV1 {
+    override val base: QDCloudNotAuthorizedApiV1
+        get() = this
+
     override val v3: QDCloudNotAuthorizedApiV1.V3?
-        get() = if (minorVersion >= 3) V3Impl(this) else null
+        get() = if (versionNumber >= 3) V3Impl(this) else null
 
     override val v5: QDCloudNotAuthorizedApiV1.V5?
-        get() = if (minorVersion >= 5) V5Impl(v3!!) else null
+        get() = if (versionNumber >= 5) V5Impl(v3!!) else null
 
     override suspend fun getCredentialsFromOAuthCode(
         code: String,
@@ -65,9 +66,15 @@ internal class QDCloudNotAuthorizedApiV1Impl(
         }
     }
 
-    private class V3Impl(base: QDCloudNotAuthorizedApiV1) : QDCloudNotAuthorizedApiV1.V3, QDCloudNotAuthorizedApiV1 by base
+    private class V3Impl(base: QDCloudNotAuthorizedApiV1) : QDCloudNotAuthorizedApiV1.V3, QDCloudNotAuthorizedApiV1Versions by base {
+        override val v3: QDCloudNotAuthorizedApiV1.V3
+            get() = this
+    }
 
-    private class V5Impl(base: QDCloudNotAuthorizedApiV1.V3) : QDCloudNotAuthorizedApiV1.V5, QDCloudNotAuthorizedApiV1.V3 by base
+    private class V5Impl(base: QDCloudNotAuthorizedApiV1.V3) : QDCloudNotAuthorizedApiV1.V5, QDCloudNotAuthorizedApiV1Versions.V3 by base {
+        override val v5: QDCloudNotAuthorizedApiV1.V5
+            get() = this
+    }
 }
 
 @Serializable
