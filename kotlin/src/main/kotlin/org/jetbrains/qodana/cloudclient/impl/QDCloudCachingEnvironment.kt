@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTime::class)
-
 package org.jetbrains.qodana.cloudclient.impl
 
 import kotlinx.coroutines.*
@@ -7,7 +5,6 @@ import org.jetbrains.qodana.cloudclient.QDCloudEnvironment
 import org.jetbrains.qodana.cloudclient.QDCloudResponse
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
 internal class QDCloudCachingEnvironment(

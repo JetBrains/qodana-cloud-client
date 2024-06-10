@@ -4,6 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.jetbrains.qodana.cloudclient.*
 
+private const val INVALID_VERSION_FORMAT = "Invalid version format"
+
 internal class QDCloudByFrontendEnvironment(
     private val frontendUrl: String,
     private val httpClient: QDCloudHttpClient
@@ -21,7 +23,7 @@ internal class QDCloudByFrontendEnvironment(
             ).value()
 
             val api = urls.api.versions.map { it.asApi() }
-            val linters = urls.linters.versions.map { it.asApi() }
+            val linters = urls.linters?.versions?.map { it.asApi() } ?: emptyList()
 
             QDCloudEnvironment.Apis(api, linters)
         }
@@ -29,14 +31,20 @@ internal class QDCloudByFrontendEnvironment(
 
     private fun BackendUrls.VersionUrl.asApi(): QDCloudEnvironment.Apis.Api {
         val host = url
-        val (major, minor) = version.split(".").map { it.toInt() }
+        val (major, minor) = try {
+            version.split(".").map { it.toInt() }
+        } catch (e : NumberFormatException) {
+            throw QDCloudException.Error(INVALID_VERSION_FORMAT, responseCode = null, cause = e)
+        } catch (e : IndexOutOfBoundsException) {
+            throw QDCloudException.Error(INVALID_VERSION_FORMAT, responseCode = null, cause = e)
+        }
         return QDCloudEnvironment.Apis.Api(host, major, minor)
     }
 
     @Serializable
     private data class BackendUrls(
         @SerialName("api") val api: VersionsHolder,
-        @SerialName("linters") val linters: VersionsHolder
+        @SerialName("linters") val linters: VersionsHolder?
     ) {
         @Serializable
         data class VersionsHolder(

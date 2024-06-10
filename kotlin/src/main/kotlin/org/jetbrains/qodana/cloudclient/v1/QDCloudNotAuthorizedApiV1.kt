@@ -15,12 +15,10 @@ interface QDCloudNotAuthorizedApiV1 : QDCloudNotAuthorizedApiV1Versions, QDCloud
     suspend fun getOAuthProviderData(): QDCloudResponse<QDCloudSchema.OAuthProviderData>
 
     // API present in >= 1.3 versions
-    interface V3 : QDCloudNotAuthorizedApiV1Versions.V3 {
-    }
+    interface V3 : QDCloudNotAuthorizedApiV1Versions.V3
 
     // API present in >= 1.5 versions
-    interface V5 : QDCloudNotAuthorizedApiV1Versions.V5 {
-    }
+    interface V5 : QDCloudNotAuthorizedApiV1Versions.V5
 }
 
 /**

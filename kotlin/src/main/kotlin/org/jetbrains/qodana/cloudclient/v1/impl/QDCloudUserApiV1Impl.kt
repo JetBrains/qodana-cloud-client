@@ -169,7 +169,6 @@ internal class QDCloudUserApiV1Impl(
         )
     }
 
-    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
     override suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String> {
         return qodanaCloudResponse {
             val token = tokenProvider.invoke().value()

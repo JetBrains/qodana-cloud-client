@@ -9,7 +9,9 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 interface QDCloudHttpClient {
-    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
+    /**
+     * Use [request] instead to not care about deserialization
+     */
     suspend fun doRequest(host: String, request: QDCloudRequest, token: String?): QDCloudResponse<String>
 }
 

@@ -45,7 +45,9 @@ interface QDCloudApiV1Versions<out T> where T : QDCloudApiV1Versions<T>, T : QDC
 }
 
 interface QDCloudApiV1Base {
-    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
+    /**
+     * Use [request] instead to not care about deserialization
+     */
     suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String>
 }
 

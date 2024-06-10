@@ -38,8 +38,7 @@ sealed class QDCloudException : Exception() {
 @QDCloudResponseBlockDsl
 suspend fun <T> qodanaCloudResponse(action: suspend QDCloudResponseBlock.() -> T): QDCloudResponse<T> {
     return try {
-        val block = QDCloudResponseBlock()
-        val value = with(block) {
+        val value = with(RESPONSE_BLOCK) {
             action()
         }
         QDCloudResponse.Success(value)
@@ -58,6 +57,8 @@ fun <T> QDCloudResponse<T>.asSuccess(): T? {
         is QDCloudResponse.Error -> null
     }
 }
+
+private val RESPONSE_BLOCK = QDCloudResponseBlock()
 
 class QDCloudResponseBlock internal constructor() {
     fun <T> QDCloudResponse<T>.value(): T {

@@ -18,8 +18,8 @@ interface QDCloudEnvironment {
     ) {
         data class Api(
             val host: String,
-            val minorVersion: Int,
             val majorVersion: Int,
+            val minorVersion: Int,
         )
     }
 }

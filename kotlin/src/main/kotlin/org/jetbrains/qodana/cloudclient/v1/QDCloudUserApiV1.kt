@@ -59,12 +59,10 @@ interface QDCloudUserApiV1 : QDCloudUserApiV1Versions, QDCloudApiV1Base {
     ): QDCloudResponse<QDCloudSchema.Project>
 
     // API present in >= 1.3 versions
-    interface V3 : QDCloudUserApiV1Versions.V3 {
-    }
+    interface V3 : QDCloudUserApiV1Versions.V3
 
     // API present in >= 1.3 versions
-    interface V5 : QDCloudUserApiV1Versions.V5 {
-    }
+    interface V5 : QDCloudUserApiV1Versions.V5
 }
 
 /**

@@ -3,6 +3,7 @@ package org.jetbrains.qodana.cloudclient
 import kotlinx.coroutines.GlobalScope
 import java.net.http.HttpClient
 
+@Suppress("unused")
 private suspend fun example() {
     val client = createClient()
 
@@ -86,6 +87,6 @@ private suspend fun processProjectName(client: QDCloudClient) {
     }
 }
 
-private suspend fun userToken(): QDCloudResponse.Success<String> {
+private fun userToken(): QDCloudResponse.Success<String> {
     return QDCloudResponse.Success("user-token")
 }

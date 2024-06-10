@@ -56,7 +56,6 @@ internal class QDCloudNotAuthorizedApiV1Impl(
         )
     }
 
-    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
     override suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String> {
         return httpClient.doRequest(host, request, token = null)
     }

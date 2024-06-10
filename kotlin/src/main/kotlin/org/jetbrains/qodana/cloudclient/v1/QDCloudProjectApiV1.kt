@@ -15,12 +15,10 @@ interface QDCloudProjectApiV1 : QDCloudProjectApiV1Versions, QDCloudApiV1Base {
     ): QDCloudResponse<QDCloudSchema.FinishPublishReportData>
 
     // API present in >= 1.3 versions
-    interface V3 : QDCloudProjectApiV1Versions.V3 {
-    }
+    interface V3 : QDCloudProjectApiV1Versions.V3
 
     // API present in >= 1.5 versions
-    interface V5 : QDCloudProjectApiV1Versions.V5 {
-    }
+    interface V5 : QDCloudProjectApiV1Versions.V5
 }
 
 /**
