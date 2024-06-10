@@ -2,7 +2,7 @@ package org.jetbrains.qodana.cloudclient.v1.impl
 
 import kotlinx.serialization.encodeToString
 import org.jetbrains.qodana.cloudclient.QDCloudHttpClient
-import org.jetbrains.qodana.cloudclient.QDCloudRequestMethod
+import org.jetbrains.qodana.cloudclient.QDCloudRequest
 import org.jetbrains.qodana.cloudclient.QDCloudResponse
 import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
 import org.jetbrains.qodana.cloudclient.qodanaCloudResponse
@@ -25,37 +25,75 @@ internal class QDCloudUserApiV1Impl(
         get() = if (versionNumber >= 5) V5Impl(v3!!) else null
 
     override suspend fun getUserLicenses(): QDCloudResponse<QDCloudSchema.UserLicenses> {
-        return request("users/me/licenses", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "users/me/licenses",
+                QDCloudRequest.GET
+            )
+        )
     }
 
     override suspend fun getUserInfo(): QDCloudResponse<QDCloudSchema.UserInfo> {
-        return request("users/me", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "users/me",
+                QDCloudRequest.GET
+            )
+        )
     }
 
     override suspend fun getOrganizations(): QDCloudResponse<List<QDCloudSchema.Organization>> {
-        return request("organizations", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "organizations",
+                QDCloudRequest.GET
+            )
+        )
     }
 
     override suspend fun getTeams(
         organizationId: String,
         paginatedRequestParameters: QDCloudRequestParameters.Paginated
     ): QDCloudResponse<QDCloudSchema.Paginated<QDCloudSchema.Team>> {
-        return request("organizations/$organizationId/teams", QDCloudRequestMethod.GET(paginatedRequestParameters.toMap()))
+        return request(
+            QDCloudRequest(
+                "organizations/$organizationId/teams",
+                QDCloudRequest.GET,
+                parameters = paginatedRequestParameters.toMap()
+            )
+        )
     }
 
     override suspend fun getProjectsOfTeam(
         teamId: String,
         paginatedRequestParameters: QDCloudRequestParameters.Paginated
     ): QDCloudResponse<QDCloudSchema.Paginated<QDCloudSchema.ProjectInTeam>> {
-        return request("teams/${teamId}/projects", QDCloudRequestMethod.GET(paginatedRequestParameters.toMap()))
+        return request(
+            QDCloudRequest(
+                "teams/${teamId}/projects",
+                QDCloudRequest.GET,
+                parameters = paginatedRequestParameters.toMap()
+            )
+        )
     }
 
     override suspend fun getProjectByOriginUrl(originUrl: String): QDCloudResponse<QDCloudSchema.ProjectsByOriginUrl> {
-        return request("projects/search", QDCloudRequestMethod.GET(mapOf("originUrl" to originUrl)))
+        return request(
+            QDCloudRequest(
+                "projects/search",
+                QDCloudRequest.GET,
+                parameters = mapOf("originUrl" to originUrl)
+            )
+        )
     }
 
     override suspend fun getProjectProperties(projectId: String): QDCloudResponse<QDCloudSchema.Project> {
-        return request("projects/$projectId", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "projects/$projectId",
+                QDCloudRequest.GET
+            )
+        )
     }
 
     override suspend fun getReportsTimeline(
@@ -64,10 +102,10 @@ internal class QDCloudUserApiV1Impl(
         paginatedRequestParameters: QDCloudRequestParameters.Paginated
     ): QDCloudResponse<QDCloudSchema.Paginated<QDCloudSchema.Report>> {
         return request(
-            "projects/$projectId/timeline",
-            QDCloudRequestMethod.GET(
-                paginatedRequestParameters.toMap() +
-                        mapOf("states" to states.joinToString(","))
+            QDCloudRequest(
+                "projects/$projectId/timeline",
+                QDCloudRequest.GET,
+                parameters = paginatedRequestParameters.toMap() + mapOf("states" to states.joinToString(","))
             )
         )
     }
@@ -79,18 +117,20 @@ internal class QDCloudUserApiV1Impl(
         paginatedRequestParameters: QDCloudRequestParameters.Paginated
     ): QDCloudResponse<QDCloudSchema.Paginated<QDCloudSchema.ReportWithRevision>> {
         require((from ?: Instant.MIN) <= ((to ?: Instant.MAX))) { "to must be >= from" }
+
+        val fromToParameters = buildMap {
+            if (from != null) {
+                put("from", from.toString())
+            }
+            if (to != null) {
+                put("to", to.toString())
+            }
+        }
         return request(
-            "projects/$projectId/revisions",
-            QDCloudRequestMethod.GET(
-                paginatedRequestParameters.toMap() +
-                        buildMap {
-                            if (from != null) {
-                                put("from", from.toString())
-                            }
-                            if (to != null) {
-                                put("to", to.toString())
-                            }
-                        }
+            QDCloudRequest(
+                "projects/$projectId/revisions",
+                QDCloudRequest.GET,
+                parameters = paginatedRequestParameters.toMap() + fromToParameters
             )
         )
     }
@@ -100,13 +140,21 @@ internal class QDCloudUserApiV1Impl(
         filenames: List<String>
     ): QDCloudResponse<List<QDCloudSchema.Files>> {
         return request(
-            "reports/$reportId/files",
-            QDCloudRequestMethod.GET(mapOf("paths" to filenames.joinToString(",")))
+            QDCloudRequest(
+                "reports/$reportId/files",
+                QDCloudRequest.GET,
+                parameters = mapOf("paths" to filenames.joinToString(","))
+            )
         )
     }
 
     override suspend fun getReportData(reportId: String): QDCloudResponse<QDCloudSchema.ReportData> {
-        return request("reports/$reportId", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "reports/$reportId",
+                QDCloudRequest.GET
+            )
+        )
     }
 
     override suspend fun createProjectInTeam(
@@ -114,20 +162,18 @@ internal class QDCloudUserApiV1Impl(
         name: String
     ): QDCloudResponse<QDCloudSchema.Project> {
         return request(
-            "teams/$teamId/projects/",
-            QDCloudRequestMethod.POST(QDCloudJson.encodeToString(mapOf("name" to name)))
+            QDCloudRequest(
+                "teams/$teamId/projects/",
+                QDCloudRequest.POST(QDCloudJson.encodeToString(mapOf("name" to name)))
+            )
         )
     }
 
     @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
-    override suspend fun doRequest(
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String>,
-    ): QDCloudResponse<String> {
+    override suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String> {
         return qodanaCloudResponse {
             val token = tokenProvider.invoke().value()
-            httpClient.doRequest(host, path, method, headers, token).value()
+            httpClient.doRequest(host, request, token).value()
         }
     }
 

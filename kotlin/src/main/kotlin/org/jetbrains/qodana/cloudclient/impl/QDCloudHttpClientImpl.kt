@@ -13,6 +13,7 @@ import java.net.URI
 import java.net.URLEncoder
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
+import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.net.http.HttpTimeoutException
 import kotlin.io.path.Path
@@ -31,23 +32,19 @@ internal class QDCloudHttpClientImpl(
     @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
     override suspend fun doRequest(
         host: String,
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String>,
+        request: QDCloudRequest,
         token: String?,
     ): QDCloudResponse<String> {
-        val request = buildRequestToQodanaCloud(host, path, method, headers, token)
-        return sendRequestToQodanaCloud(request)
+        val httpRequest = buildRequestToQodanaCloud(host, request, token)
+        return sendRequestToQodanaCloud(httpRequest)
     }
 
     private fun buildRequestToQodanaCloud(
         host: String,
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String> = emptyMap(),
+        request: QDCloudRequest,
         authToken: String? = null,
     ): HttpRequest {
-        val pathToSanitize = Path(path)
+        val pathToSanitize = Path(request.path)
         require(!pathToSanitize.isAbsolute) {
             "Qodana Cloud API request path must be relative"
         }
@@ -55,34 +52,33 @@ internal class QDCloudHttpClientImpl(
             "Qodana Cloud API request path can not contain parent directory references"
         }
 
-        val url = URI(host).resolve(path).withParameters(method.parameters)
+        val url = URI(host).resolve(request.path).withParameters(request.parameters)
 
         val requestBuilder = HttpRequest.newBuilder(url)
             .header("Content-Type", "application/json")
 
-        if (headers.isNotEmpty()) {
-            requestBuilder.headers(*(headers.flatMap { listOf(it.key, it.value) }).toTypedArray())
+        if (request.headers.isNotEmpty()) {
+            requestBuilder.headers(*(request.headers.flatMap { listOf(it.key, it.value) }).toTypedArray())
         }
         if (authToken != null) {
             requestBuilder.header("Authorization", "Bearer $authToken")
         }
         requestBuilder.timeout(timeout.toJavaDuration())
-        when(method) {
-            is QDCloudRequestMethod.GET -> {
+        when(val requestType = request.type) {
+            QDCloudRequest.GET -> {
                 requestBuilder.GET()
             }
-            is QDCloudRequestMethod.POST -> {
-                requestBuilder.POST(HttpRequest.BodyPublishers.ofString(method.body))
+            is QDCloudRequest.POST -> {
+                requestBuilder.POST(requestType.body.asRequestBody())
             }
-            is QDCloudRequestMethod.DELETE -> {
+            QDCloudRequest.DELETE -> {
                 requestBuilder.DELETE()
             }
-            is QDCloudRequestMethod.PUT -> {
-                requestBuilder.PUT(HttpRequest.BodyPublishers.ofString(method.body))
+            is QDCloudRequest.PUT -> {
+                requestBuilder.PUT(requestType.body.asRequestBody())
             }
-            is QDCloudRequestMethod.Other -> {
-                val body = HttpRequest.BodyPublishers.ofString(method.body)
-                requestBuilder.method(method.name, body)
+            is QDCloudRequest.Other -> {
+                requestBuilder.method(requestType.name, requestType.body.asRequestBody())
             }
         }
         return requestBuilder.build()
@@ -145,4 +141,8 @@ private fun URI.withParameter(paramName: String, paramValue: String): URI {
         newQuery,  // use the new query string
         fragment
     )
+}
+
+private fun String?.asRequestBody(): HttpRequest.BodyPublisher {
+    return this?.let { BodyPublishers.ofString(it) } ?: BodyPublishers.noBody()
 }

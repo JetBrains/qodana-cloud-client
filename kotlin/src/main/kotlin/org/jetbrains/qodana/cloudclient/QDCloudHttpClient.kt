@@ -10,13 +10,7 @@ import kotlin.time.Duration.Companion.seconds
 
 interface QDCloudHttpClient {
     @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
-    suspend fun doRequest(
-        host: String,
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String> = emptyMap(),
-        token: String?,
-    ): QDCloudResponse<String>
+    suspend fun doRequest(host: String, request: QDCloudRequest, token: String?): QDCloudResponse<String>
 }
 
 fun QDCloudHttpClient(
@@ -37,13 +31,11 @@ fun QDCloudHttpClient(
 
 suspend inline fun <reified T> QDCloudHttpClient.request(
     host: String,
-    path: String,
-    method: QDCloudRequestMethod,
-    headers: Map<String, String> = emptyMap(),
+    request: QDCloudRequest,
     token: String?,
 ): QDCloudResponse<T> {
     return qodanaCloudResponse {
-        val content = doRequest(host, path, method, headers, token).value()
+        val content = doRequest(host, request, token).value()
         QDCloudJson.decodeFromString<T>(content)
     }
 }

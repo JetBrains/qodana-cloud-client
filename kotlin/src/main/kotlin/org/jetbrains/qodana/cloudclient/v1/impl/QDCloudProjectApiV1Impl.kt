@@ -2,7 +2,7 @@ package org.jetbrains.qodana.cloudclient.v1.impl
 
 import kotlinx.serialization.encodeToString
 import org.jetbrains.qodana.cloudclient.QDCloudHttpClient
-import org.jetbrains.qodana.cloudclient.QDCloudRequestMethod
+import org.jetbrains.qodana.cloudclient.QDCloudRequest
 import org.jetbrains.qodana.cloudclient.QDCloudResponse
 import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
 import org.jetbrains.qodana.cloudclient.v1.*
@@ -23,13 +23,23 @@ internal class QDCloudProjectApiV1Impl(
         get() = if (versionNumber >= 5) V5Impl(v3!!) else null
 
     override suspend fun getProjectProperties(): QDCloudResponse<QDCloudSchema.Project> {
-        return request("projects", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "projects",
+                QDCloudRequest.GET
+            )
+        )
     }
 
     override suspend fun startUpload(
         request: QDCloudRequestParameters.PublishRequest
     ): QDCloudResponse<QDCloudSchema.StartPublishReportData> {
-        return request("reports", QDCloudRequestMethod.POST(QDCloudJson.encodeToString(request)))
+        return request(
+            QDCloudRequest(
+                "reports",
+                QDCloudRequest.POST(QDCloudJson.encodeToString(request))
+            )
+        )
     }
 
     override suspend fun finishUpload(
@@ -40,18 +50,16 @@ internal class QDCloudProjectApiV1Impl(
             QDCloudJson.encodeToString(mapOf("languages" to languages))
         } ?: ""
         return request(
-            "reports/$reportId/finish",
-            QDCloudRequestMethod.POST(body)
+            QDCloudRequest(
+                "reports/$reportId/finish",
+                QDCloudRequest.POST(body)
+            )
         )
     }
 
     @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
-    override suspend fun doRequest(
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String>,
-    ): QDCloudResponse<String> {
-        return httpClient.doRequest(host, path, method, headers, token)
+    override suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String> {
+        return httpClient.doRequest(host, request, token)
     }
 
     private class V3Impl(base: QDCloudProjectApiV1) : QDCloudProjectApiV1.V3, QDCloudProjectApiV1Versions by base {

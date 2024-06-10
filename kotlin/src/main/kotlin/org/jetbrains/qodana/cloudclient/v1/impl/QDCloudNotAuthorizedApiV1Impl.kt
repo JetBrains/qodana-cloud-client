@@ -27,9 +27,11 @@ internal class QDCloudNotAuthorizedApiV1Impl(
         codeVerifier: String
     ): QDCloudResponse<QDCloudSchema.AuthorizationData> {
         return doRequestForCredentials(
-            "idea/auth/token/",
             token = null,
-            QDCloudRequestMethod.POST(QDCloudJson.encodeToString(mapOf("code" to code)))
+            QDCloudRequest(
+                "idea/auth/token/",
+                QDCloudRequest.POST(QDCloudJson.encodeToString(mapOf("code" to code)))
+            )
         )
     }
 
@@ -37,31 +39,34 @@ internal class QDCloudNotAuthorizedApiV1Impl(
         refreshCode: String
     ): QDCloudResponse<QDCloudSchema.AuthorizationData> {
         return doRequestForCredentials(
-            "idea/auth/refresh/",
             refreshCode,
-            QDCloudRequestMethod.POST()
+            QDCloudRequest(
+                "idea/auth/refresh/",
+                QDCloudRequest.POST()
+            )
         )
     }
 
     override suspend fun getOAuthProviderData(): QDCloudResponse<QDCloudSchema.OAuthProviderData> {
-        return request("oauth/configurations", QDCloudRequestMethod.GET())
+        return request(
+            QDCloudRequest(
+                "oauth/configurations",
+                QDCloudRequest.GET
+            )
+        )
     }
 
-    override suspend fun doRequest(
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String>,
-    ): QDCloudResponse<String> {
-        return httpClient.doRequest(host, path, method, headers, token = null)
+    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
+    override suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String> {
+        return httpClient.doRequest(host, request, token = null)
     }
 
     private suspend fun doRequestForCredentials(
-        path: String,
         token: String?,
-        method: QDCloudRequestMethod,
+        request: QDCloudRequest,
     ): QDCloudResponse<QDCloudSchema.AuthorizationData> {
         return qodanaCloudResponse {
-            val data = httpClient.request<RawAuthorizationResponseData>(host, path, method, emptyMap(), token).value()
+            val data = httpClient.request<RawAuthorizationResponseData>(host, request, token).value()
             QDCloudSchema.AuthorizationData(data.access, data.refresh, Instant.parse(data.expiresAt))
         }
     }

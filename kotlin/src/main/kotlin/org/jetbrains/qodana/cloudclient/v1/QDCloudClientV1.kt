@@ -1,7 +1,7 @@
 package org.jetbrains.qodana.cloudclient.v1
 
 import org.jetbrains.qodana.cloudclient.QDCloudHttpClient
-import org.jetbrains.qodana.cloudclient.QDCloudRequestMethod
+import org.jetbrains.qodana.cloudclient.QDCloudRequest
 import org.jetbrains.qodana.cloudclient.QDCloudResponse
 import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
 import org.jetbrains.qodana.cloudclient.qodanaCloudResponse
@@ -46,20 +46,12 @@ interface QDCloudApiV1Versions<out T> where T : QDCloudApiV1Versions<T>, T : QDC
 
 interface QDCloudApiV1Base {
     @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
-    suspend fun doRequest(
-        path: String,
-        method: QDCloudRequestMethod,
-        headers: Map<String, String> = emptyMap(),
-    ): QDCloudResponse<String>
+    suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String>
 }
 
-suspend inline fun <reified T> QDCloudApiV1Base.request(
-    path: String,
-    method: QDCloudRequestMethod,
-    headers: Map<String, String> = emptyMap(),
-): QDCloudResponse<T> {
+suspend inline fun <reified T> QDCloudApiV1Base.request(request: QDCloudRequest): QDCloudResponse<T> {
     return qodanaCloudResponse {
-        val content = doRequest(path, method, headers).value()
+        val content = doRequest(request).value()
         QDCloudJson.decodeFromString<T>(content)
     }
 }

@@ -13,9 +13,10 @@ internal class QDCloudByFrontendEnvironment(
         return qodanaCloudResponse {
             val urls = httpClient.request<BackendUrls>(
                 frontendUrl,
-                "api/versions",
-                QDCloudRequestMethod.GET(),
-                emptyMap(),
+                QDCloudRequest(
+                    "api/versions",
+                    QDCloudRequest.GET
+                ),
                 token = null
             ).value()
 
