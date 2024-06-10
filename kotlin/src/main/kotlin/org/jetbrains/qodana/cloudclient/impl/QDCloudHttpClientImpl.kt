@@ -99,12 +99,16 @@ internal class QDCloudHttpClientImpl(
                 } catch (e: SocketException) {
                     throw QDCloudException.Offline(e)
                 } catch (e : HttpTimeoutException) {
-                    throw QDCloudException.Error("Request timeout", null, cause = e)
+                    throw QDCloudException.Offline(e)
                 } catch (e: IOException) {
-                    throw QDCloudException.Error(e.message ?: "IO error occurred", null, cause = e)
+                    throw QDCloudException.Offline(e)
                 }
             }.retryWhen { e, attempt ->
-                if (e is QDCloudException && attempt < backoffRetries) {
+                val is400ErrorNotRetry = e is QDCloudException.Error &&
+                        e.responseCode in (400 until 500) &&
+                        e.responseCode != 408
+                val isErrorRetry = e is QDCloudException && !is400ErrorNotRetry
+                if (isErrorRetry && attempt + 1 < backoffRetries) {
                     delay(backoffExponentialBase.pow(attempt.toInt()).seconds)
                     true
                 } else {
