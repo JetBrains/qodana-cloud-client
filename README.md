@@ -1,31 +1,117 @@
-# sa/qodana-cloud-jvm-client
+# Qodana Cloud API client libraries
+
+[![official JetBrains project](https://jb.gg/badges/official.svg)][jb:confluence-on-gh]
+[![Qodana](https://github.com/JetBrains/qodana-cloud-client/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/JetBrains/qodana-cloud-client/actions/workflows/qodana_code_quality.yml)
+[![GitHub Discussions](https://img.shields.io/github/discussions/jetbrains/qodana)][jb:discussions]
+[![Twitter Follow](https://img.shields.io/badge/follow-%40Qodana-1DA1F2?logo=twitter&style=social)][jb:twitter]
+
+Client libraries for [Qodana Cloud](https://qodana.cloud/) API with support for different Qodana Cloud versions
+
+Libraries available for:
+- [Kotlin](#Kotlin)
+
+
+### Why 
+With self-hosted, we face a challenge: backwards compatibility of Qodana Cloud clients with old Qodana Cloud versions.
+Example: the latest Qodana IDE plugin wants to use API available only in the latest Qodana Cloud, but the user has old self-hosted Qodana Cloud
+
+Solution: API client libraries built with support of Qodana Cloud versions on "code level": 
+while working with a library's API, you are aware of which Qodana Cloud version is currently available and 
+able to request a different version (for example, require v1.5 which has an API needed for the feature) 
 
 
 
-## Getting Started
+## Kotlin
 
-Download links:
+### Adding to your project
 
-SSH clone URL: ssh://git@git.jetbrains.team/sa/qodana-cloud-jvm-client.git
+### Working with Qodana Cloud API
 
-HTTPS clone URL: https://git.jetbrains.team/sa/qodana-cloud-jvm-client.git
+```kotlin
+suspend fun main() {
+    val client = createClient()
 
+    processUserName(client)
+    processProjectName(client)
+}
 
+private fun createClient(): QDCloudClient {
+    val httpClient = QDCloudHttpClient(HttpClient.newHttpClient())
+    val environment = QDCloudEnvironment("https://qodana.cloud", httpClient).requestOn(someCoroutineScope)
+    return QDCloudClient(httpClient, environment)
+}
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+private suspend fun processUserName(client: QDCloudClient) {
+    val userName = qodanaCloudResponse {
+        val userApi = client.v1().value().userApi(::userToken)
+        val v5 = userApi.v5
+        val v3 = userApi.v3
+        when {
+            v5 != null -> {
+                // v5-specific call v5.xxx().value()
+                // here you can access APIs: (v1.3, v1) like this: v5.v3.xxx(), v5.base.xxx()
+                "user name from V5"
+            }
+            v3 != null -> {
+                // v3-specific call v3.xxx().value()
+                // here you can access APIs: (v1) like this: v3.base.xxx()
+                "user name from V3"
+            }
+            else -> {
+                userApi.getUserInfo().value().fullName
+            }
+        }
+    }
+    when(userName) {
+        is QDCloudResponse.Success -> {
+            val name = userName.value
+            println("Username is $name")
+        }
+        is QDCloudResponse.Error.Offline -> {
+            println("Failed to obtain username, qodana cloud is not available")
+        }
+        is QDCloudResponse.Error.ResponseFailure -> {
+            println("Failed to obtain username, code: ${userName.responseCode}, message: ${userName.errorMessage}")
+        }
+    }
+}
 
-## Prerequisites
+private suspend fun processProjectName(client: QDCloudClient) {
+    val projectName = qodanaCloudResponse {
+        val projectApi = client.v1().value().projectApi("token")
+        val v5 = projectApi.v5
+        val v3 = projectApi.v3
+        when {
+            v5 != null -> {
+                // v5-specific call v5.xxx().value()
+                // here you can access APIs: (v1.3, v1) like this: v5.v3.xxx(), v5.base.xxx()
+                "project name from V5"
+            }
+            v3 != null -> {
+                // v3-specific call v3.xxx().value()
+                // here you can access APIs: (v1) like this: v3.base.xxx()
+                "project name from V3"
+            }
+            else -> {
+                projectApi.getProjectProperties().value().name
+            }
+        }
+    }
+    when(projectName) {
+        is QDCloudResponse.Success -> {
+            val name = projectName.value
+            println("Project name is $name")
+        }
+        is QDCloudResponse.Error.Offline -> {
+            println("Failed to obtain project name, qodana cloud is not available")
+        }
+        is QDCloudResponse.Error.ResponseFailure -> {
+            println("Failed to obtain project name, code: ${projectName.responseCode}, message: ${projectName.errorMessage}")
+        }
+    }
+}
 
-What things you need to install the software and how to install them.
-
+private fun userToken(): QDCloudResponse.Success<String> {
+    return QDCloudResponse.Success("user-token")
+}
 ```
-Examples
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a production system.
-
-## Resources
-
-Add links to external resources for this project, such as CI server, bug tracker, etc.
