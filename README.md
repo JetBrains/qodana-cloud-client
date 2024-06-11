@@ -15,7 +15,7 @@ Libraries available for:
 With self-hosted, we face a challenge: backwards compatibility of Qodana Cloud clients with old Qodana Cloud versions.
 Example: the latest Qodana IDE plugin wants to use API available only in the latest Qodana Cloud, but the user has old self-hosted Qodana Cloud
 
-Solution: API client libraries built with support of Qodana Cloud versions on "code level": 
+Solution: API client libraries built with support of Qodana Cloud versions declared in library's API: 
 while working with a library's API, you are aware of which Qodana Cloud version is currently available and 
 able to request a different version (for example, require v1.5 which has an API needed for the feature) 
 
