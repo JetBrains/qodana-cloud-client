@@ -115,3 +115,17 @@ private fun userToken(): QDCloudResponse.Success<String> {
     return QDCloudResponse.Success("user-token")
 }
 ```
+
+[gh:qodana]: https://github.com/JetBrains/qodana-action/actions/workflows/code_scanning.yml
+
+[youtrack]: https://youtrack.jetbrains.com/issues/QD
+
+[youtrack-new-issue]: https://youtrack.jetbrains.com/newIssue?project=QD&c=Platform%20GitHub%20action
+
+[jb:confluence-on-gh]: https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub
+
+[jb:discussions]: https://jb.gg/qodana-discussions
+
+[jb:twitter]: https://twitter.com/Qodana
+
+[jb:docker]: https://hub.docker.com/r/jetbrains/qodana
