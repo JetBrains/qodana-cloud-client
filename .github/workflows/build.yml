@@ -18,4 +18,5 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Run tests
+        working-directory: kotlin
         run: ./gradlew check
