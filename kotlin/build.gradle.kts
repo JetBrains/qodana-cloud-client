@@ -38,18 +38,21 @@ tasks {
     withType<AbstractPublishToMaven>().all {
         dependsOn("check")
     }
+
+    register("publishAndLogStatusToTC") {
+        dependsOn("publish")
+        doLast {
+            println("##teamcity[buildStatus text = 'Published qodana-cloud-kotlin-client v${libraryVersion()}']")
+        }
+    }
 }
 
 publishing {
     publications {
         create<MavenPublication>("qodana-cloud-kotlin-client") {
-            val majorVersion: String by project
-            val minorVersion: String by project
-            val patch: String by project
-
             group = "org.jetbrains.qodana"
             artifactId = "qodana-cloud-kotlin-client"
-            version = "$majorVersion.$minorVersion.$patch"
+            version = libraryVersion()
 
             from(components["java"])
 
@@ -87,4 +90,12 @@ publishing {
             }
         }
     }
+}
+
+fun libraryVersion(): String {
+    val majorVersion: String by project
+    val minorVersion: String by project
+    val patch: String by project
+
+    return "$majorVersion.$minorVersion.$patch"
 }
