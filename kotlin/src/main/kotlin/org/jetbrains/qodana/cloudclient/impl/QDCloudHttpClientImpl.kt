@@ -29,12 +29,7 @@ internal class QDCloudHttpClientImpl(
     private val timeout: Duration,
     private val ioDispatcher: CoroutineDispatcher,
 ) : QDCloudHttpClient {
-    @Deprecated("Use `request` instead", replaceWith = ReplaceWith("request"), level = DeprecationLevel.WARNING)
-    override suspend fun doRequest(
-        host: String,
-        request: QDCloudRequest,
-        token: String?,
-    ): QDCloudResponse<String> {
+    override suspend fun doRequest(host: String, request: QDCloudRequest, token: String?): QDCloudResponse<String> {
         val httpRequest = buildRequestToQodanaCloud(host, request, token)
         return sendRequestToQodanaCloud(httpRequest)
     }

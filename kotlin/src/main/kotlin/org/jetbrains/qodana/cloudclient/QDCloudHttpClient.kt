@@ -15,6 +15,20 @@ interface QDCloudHttpClient {
     suspend fun doRequest(host: String, request: QDCloudRequest, token: String?): QDCloudResponse<String>
 }
 
+/**
+ * Do a request to the server
+ */
+suspend inline fun <reified T> QDCloudHttpClient.request(
+    host: String,
+    request: QDCloudRequest,
+    token: String?,
+): QDCloudResponse<T> {
+    return qodanaCloudResponse {
+        val content = doRequest(host, request, token).value()
+        QDCloudJson.decodeFromString<T>(content)
+    }
+}
+
 fun QDCloudHttpClient(
     client: HttpClient,
     backoffRetries: Int = 3,
@@ -29,15 +43,4 @@ fun QDCloudHttpClient(
         timeout,
         ioDispatcher
     )
-}
-
-suspend inline fun <reified T> QDCloudHttpClient.request(
-    host: String,
-    request: QDCloudRequest,
-    token: String?,
-): QDCloudResponse<T> {
-    return qodanaCloudResponse {
-        val content = doRequest(host, request, token).value()
-        QDCloudJson.decodeFromString<T>(content)
-    }
 }

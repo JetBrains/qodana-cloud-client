@@ -3,6 +3,9 @@ package org.jetbrains.qodana.cloudclient.v1
 import org.jetbrains.qodana.cloudclient.QDCloudResponse
 import java.time.Instant
 
+/**
+ * Add API of a new minor version by declaring new `Vxxx` (like [V3], [V5]) extending the ***V1Versions.Vxxx
+ */
 interface QDCloudUserApiV1 : QDCloudUserApiV1Versions, QDCloudApiV1Base {
     suspend fun getUserLicenses(): QDCloudResponse<QDCloudSchema.UserLicenses>
 
@@ -67,6 +70,8 @@ interface QDCloudUserApiV1 : QDCloudUserApiV1Versions, QDCloudApiV1Base {
 
 /**
  * Add API of a new minor version by declaring new `Vxxx` (like [V3], [V5]) extending the previous version, and a val property like [v3]/[v5]
+ *
+ * See [QDCloudApiV1Versions]
  */
 interface QDCloudUserApiV1Versions : QDCloudApiV1Versions<QDCloudUserApiV1> {
     val v3: QDCloudUserApiV1.V3?

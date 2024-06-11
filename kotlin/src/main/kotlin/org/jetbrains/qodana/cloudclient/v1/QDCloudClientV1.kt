@@ -37,10 +37,14 @@ fun QDCloudClientV1(
  * so that code `v5.v3.callV3()` is valid, but `v5.callV3()` is not: to do a call to v3 api you need to get v3 version
  */
 interface QDCloudApiV1Versions<out T> where T : QDCloudApiV1Versions<T>, T : QDCloudApiV1Base {
-    // exact minor version on the BE
+    /**
+     * exact minor version on the BE
+     */
     val versionNumber: Int
 
-    // base api, always available
+    /**
+     * base api, always available
+     */
     val base: T
 }
 
@@ -51,6 +55,10 @@ interface QDCloudApiV1Base {
     suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String>
 }
 
+/**
+ * Do custom request to the Qodana Cloud. Prefer to implement separate extension functions which would delegate to this
+ * Consider contributing directly to this library code
+ */
 suspend inline fun <reified T> QDCloudApiV1Base.request(request: QDCloudRequest): QDCloudResponse<T> {
     return qodanaCloudResponse {
         val content = doRequest(request).value()
