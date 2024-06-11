@@ -57,7 +57,8 @@ interface QDCloudApiV1Base {
 
 /**
  * Do custom request to the Qodana Cloud. Prefer to implement separate extension functions which would delegate to this
- * Consider contributing directly to this library code
+ * Consider contributing directly to this library code if you are developing a stable cloud client
+ * (IDE plugin, CLI, linter and etc)
  */
 suspend inline fun <reified T> QDCloudApiV1Base.request(request: QDCloudRequest): QDCloudResponse<T> {
     return qodanaCloudResponse {
