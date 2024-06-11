@@ -37,7 +37,7 @@ suspend fun main() {
 
 private fun createClient(): QDCloudClient {
     val httpClient = QDCloudHttpClient(HttpClient.newHttpClient())
-    val environment = QDCloudEnvironment("https://qodana.cloud", httpClient).requestOn(someCoroutineScope)
+    val environment = QDCloudEnvironment("https://qodana.cloud", httpClient).requestOn(GlobalScope)
     return QDCloudClient(httpClient, environment)
 }
 
