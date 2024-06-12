@@ -144,7 +144,7 @@ class QDCloudHttpClientTest {
     }
 
     @Serializable
-    private class ServerResponse(
+    private data class ServerResponse(
         @SerialName("name") val name: String?,
         @SerialName("id") val id: String,
     )

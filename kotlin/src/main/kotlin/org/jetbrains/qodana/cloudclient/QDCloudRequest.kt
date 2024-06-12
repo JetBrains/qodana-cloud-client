@@ -1,6 +1,6 @@
 package org.jetbrains.qodana.cloudclient
 
-class QDCloudRequest @JvmOverloads constructor(
+data class QDCloudRequest @JvmOverloads constructor(
     val path: String,
     val type: Type,
     val parameters: Map<String, String> = emptyMap(),
@@ -10,11 +10,11 @@ class QDCloudRequest @JvmOverloads constructor(
 
     data object GET : Type
 
-    class POST(val body: String? = null) : Type
+    data class POST(val body: String? = null) : Type
 
     data object DELETE : Type
 
-    class PUT(val body: String? = null) : Type
+    data class PUT(val body: String? = null) : Type
 
-    class Other(val name: String, val body: String? = null) : Type
+    data class Other(val name: String, val body: String? = null) : Type
 }

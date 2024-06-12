@@ -9,7 +9,7 @@ import java.time.Instant
 // namespace
 class QDCloudSchema private constructor() {
     @Serializable
-    class ReportWithRevision(
+    data class ReportWithRevision(
         @SerialName("reportId") val reportId: String,
         @SerialName("commit") val commit: String?
     )
@@ -31,19 +31,19 @@ class QDCloudSchema private constructor() {
     )
 
     @Serializable
-    class UserInfo(
+    data class UserInfo(
         @SerialName("id") val id: String,
         @SerialName("fullName") val fullName: String?,
         @SerialName("username") val username: String?
     )
 
     @Serializable
-    class Organization(
+    data class Organization(
         @SerialName("id") val id: String
     )
 
     @Serializable
-    class Team(
+    data class Team(
         @SerialName("id") val id: String,
         @SerialName("name") val name: String?,
         @SerialName("projectCount") val projectCount: Int,
@@ -51,14 +51,14 @@ class QDCloudSchema private constructor() {
     )
 
     @Serializable
-    class Project(
+    data class Project(
         @SerialName("id") val id: String,
         @SerialName("organizationId") val organizationId: String,
         @SerialName("name") val name: String?
     )
 
     @Serializable
-    class ProjectInTeam(
+    data class ProjectInTeam(
         @SerialName("id") val id: String,
         @SerialName("name") val name: String?,
         @SerialName("problems") val problems: Problems?,
@@ -68,19 +68,19 @@ class QDCloudSchema private constructor() {
         @SerialName("url") val url: String?,
     ) {
         @Serializable
-        class Problems(
+        data class Problems(
             @SerialName("total") val total: Int?
         )
     }
 
     // TODO: Update after resolving of QD-8063
     @Serializable
-    class ProjectsByOriginUrl(
+    data class ProjectsByOriginUrl(
         @SerialName("matchingProjects") val matchingProjects: List<MatchingProject>
     )
 
     @Serializable
-    class MatchingProject(
+    data class MatchingProject(
         @SerialName("projectId") val projectId: String,
         @SerialName("projectName") val projectName: String?,
         @SerialName("organizationName") val organizationName: String?,
@@ -89,7 +89,7 @@ class QDCloudSchema private constructor() {
         @SerialName("reportInfo") val reportInfo: ReportInfo?
     ) {
         @Serializable
-        class ReportInfo(
+        data class ReportInfo(
             @SerialName("problems") val problems: Problems?,
             @SerialName("branch") val branch: String?,
             @SerialName("lastChecked") val lastChecked: String?,
@@ -98,53 +98,53 @@ class QDCloudSchema private constructor() {
         )
 
         @Serializable
-        class Problems(
+        data class Problems(
             @SerialName("total") val total: Int?
         )
     }
 
     @Serializable
-    class Report(
+    data class Report(
         @SerialName("reportId") val reportId: String
     )
 
     @Serializable
-    class Files(
+    data class Files(
         @SerialName("files") val files: List<File>
     ) {
         @Serializable
-        class File(
+        data class File(
             @SerialName("file") val file: String,
             @SerialName("url") val url: String?
         )
     }
 
     @Serializable
-    class ReportData(
+    data class ReportData(
         @SerialName("projectId") val projectId: String
     )
 
-    class AuthorizationData(
+    data class AuthorizationData(
         val access: String,
         val refresh: String,
         val expiresAt: Instant
     )
 
     @Serializable
-    class OAuthProviderData(
+    data class OAuthProviderData(
         @SerialName("oauthUrl") val oauthUrl: String,
         @SerialName("providerName") val providerName: String
     )
 
     @Serializable
-    class StartPublishReportData(
+    data class StartPublishReportData(
         @SerialName("reportId") val reportId: String,
         @SerialName("fileLinks") val fileLinks: Map<String, String>,
         @SerialName("langsRequired") val langsRequired: Boolean,
     )
 
     @Serializable
-    class FinishPublishReportData(
+    data class FinishPublishReportData(
         @SerialName("token") val token: String,
         @SerialName("url") val url: String,
     )
@@ -173,7 +173,7 @@ class QDCloudRequestParameters private constructor() {
     }
 
     @Serializable
-    class PublishRequest(
+    data class PublishRequest(
         @SerialName("type") val type: ReportType,
         @SerialName("files") val files: List<ReportFile>,
         @SerialName("analysisId") val analysisId: String,
@@ -190,14 +190,14 @@ class QDCloudRequestParameters private constructor() {
         }
 
         @Serializable
-        class ReportFile(
+        data class ReportFile(
             @SerialName("name") val name: String,
             @SerialName("kbSize") val kbSize: Long,
             @SerialName("checksum") val checksum: String,
         )
 
         @Serializable
-        class Vcs(
+        data class Vcs(
             @SerialName("commit") val commit: String?,
             @SerialName("branch") val branch: String?,
             @SerialName("author") val author: Author? = null,
@@ -205,7 +205,7 @@ class QDCloudRequestParameters private constructor() {
         )
 
         @Serializable
-        class Author(
+        data class Author(
             @SerialName("name") val name: String,
             @SerialName("email") val email: String,
         )

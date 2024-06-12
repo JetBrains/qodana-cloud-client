@@ -42,17 +42,17 @@ internal class QDCloudByFrontendEnvironment(
     }
 
     @Serializable
-    private class BackendUrls(
+    private data class BackendUrls(
         @SerialName("api") val api: VersionsHolder,
         @SerialName("linters") val linters: VersionsHolder?
     ) {
         @Serializable
-        class VersionsHolder(
+        data class VersionsHolder(
             @SerialName("versions") val versions: List<VersionUrl>
         )
 
         @Serializable
-        class VersionUrl(
+        data class VersionUrl(
             @SerialName("version") val version: String,
             @SerialName("url") val url: String
         )

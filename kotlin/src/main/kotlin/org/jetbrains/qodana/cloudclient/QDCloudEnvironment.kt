@@ -14,11 +14,11 @@ import kotlin.time.toKotlinDuration
 interface QDCloudEnvironment {
     suspend fun getApis(): QDCloudResponse<Apis>
 
-    class Apis(
+    data class Apis(
         val api: List<Api>,
         val linters: List<Api>
     ) {
-        class Api(
+        data class Api(
             val host: String,
             val majorVersion: Int,
             val minorVersion: Int,
