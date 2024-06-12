@@ -11,7 +11,8 @@ Libraries available for:
 - [Kotlin](#Kotlin)
 
 
-### Why 
+**What "support for different Qodana Cloud versions" means**
+
 With self-hosted, we face a challenge: backwards compatibility of Qodana Cloud clients with old Qodana Cloud versions.
 Example: the latest Qodana IDE plugin wants to use API available only in the latest Qodana Cloud, but the user has old self-hosted Qodana Cloud
 
