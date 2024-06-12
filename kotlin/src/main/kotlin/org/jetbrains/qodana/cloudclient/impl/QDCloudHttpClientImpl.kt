@@ -16,11 +16,10 @@ import java.net.http.HttpRequest
 import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.net.http.HttpTimeoutException
+import java.time.Duration
 import kotlin.io.path.Path
 import kotlin.math.pow
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.toJavaDuration
 
 internal class QDCloudHttpClientImpl(
     private val client: HttpClient,
@@ -58,7 +57,7 @@ internal class QDCloudHttpClientImpl(
         if (authToken != null) {
             requestBuilder.header("Authorization", "Bearer $authToken")
         }
-        requestBuilder.timeout(timeout.toJavaDuration())
+        requestBuilder.timeout(timeout)
         when(val requestType = request.type) {
             QDCloudRequest.GET -> {
                 requestBuilder.GET()

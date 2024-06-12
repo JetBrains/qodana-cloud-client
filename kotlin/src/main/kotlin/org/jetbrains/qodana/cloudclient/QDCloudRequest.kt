@@ -1,6 +1,6 @@
 package org.jetbrains.qodana.cloudclient
 
-class QDCloudRequest(
+class QDCloudRequest @JvmOverloads constructor(
     val path: String,
     val type: Type,
     val parameters: Map<String, String> = emptyMap(),

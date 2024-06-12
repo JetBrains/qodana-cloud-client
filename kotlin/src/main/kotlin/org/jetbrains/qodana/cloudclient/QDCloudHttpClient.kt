@@ -5,8 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.qodana.cloudclient.impl.QDCloudHttpClientImpl
 import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
 import java.net.http.HttpClient
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import java.time.Duration
 
 interface QDCloudHttpClient {
     /**
@@ -29,11 +28,12 @@ suspend inline fun <reified T> QDCloudHttpClient.request(
     }
 }
 
+@JvmOverloads
 fun QDCloudHttpClient(
     client: HttpClient,
     backoffRetries: Int = 3,
     backoffExponentialBase: Double = 2.0,
-    timeout: Duration = 30.seconds,
+    timeout: Duration = Duration.ofSeconds(30),
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ): QDCloudHttpClient {
     return QDCloudHttpClientImpl(

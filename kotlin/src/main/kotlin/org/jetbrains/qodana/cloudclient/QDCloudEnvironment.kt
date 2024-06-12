@@ -3,7 +3,9 @@ package org.jetbrains.qodana.cloudclient
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.qodana.cloudclient.impl.QDCloudByFrontendEnvironment
 import org.jetbrains.qodana.cloudclient.impl.QDCloudCachingEnvironment
-import kotlin.time.Duration
+import java.time.Duration
+import java.time.temporal.ChronoUnit
+import kotlin.time.toKotlinDuration
 
 /**
  * Provides data about available backend API versions
@@ -38,10 +40,16 @@ fun QDCloudEnvironment(
  *
  * TODO – move this on [QDCloudHttpClient]?
  */
+@JvmOverloads
 fun QDCloudEnvironment.requestOn(
     scope: CoroutineScope,
     failureCacheDuration: Duration = Duration.ZERO,
-    successCacheDuration: Duration = Duration.INFINITE,
+    successCacheDuration: Duration = ChronoUnit.FOREVER.duration,
 ): QDCloudEnvironment {
-    return QDCloudCachingEnvironment(this, scope, failureCacheDuration, successCacheDuration)
+    return QDCloudCachingEnvironment(
+        this,
+        scope,
+        failureCacheDuration.toKotlinDuration(),
+        successCacheDuration.toKotlinDuration()
+    )
 }
