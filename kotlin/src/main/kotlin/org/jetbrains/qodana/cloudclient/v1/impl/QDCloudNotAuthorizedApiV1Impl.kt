@@ -82,7 +82,7 @@ internal class QDCloudNotAuthorizedApiV1Impl(
 }
 
 @Serializable
-private data class RawAuthorizationResponseData(
+private class RawAuthorizationResponseData(
     @SerialName("access") val access: String,
     @SerialName("refresh") val refresh: String,
     @SerialName("expires_at") val expiresAt: String

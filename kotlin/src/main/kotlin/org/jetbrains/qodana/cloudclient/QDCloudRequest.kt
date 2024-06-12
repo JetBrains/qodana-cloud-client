@@ -1,6 +1,6 @@
 package org.jetbrains.qodana.cloudclient
 
-data class QDCloudRequest(
+class QDCloudRequest(
     val path: String,
     val type: Type,
     val parameters: Map<String, String> = emptyMap(),
@@ -10,11 +10,11 @@ data class QDCloudRequest(
 
     data object GET : Type
 
-    data class POST(val body: String? = null) : Type
+    class POST(val body: String? = null) : Type
 
     data object DELETE : Type
 
-    data class PUT(val body: String? = null) : Type
+    class PUT(val body: String? = null) : Type
 
-    data class Other(val name: String, val body: String? = null) : Type
+    class Other(val name: String, val body: String? = null) : Type
 }
