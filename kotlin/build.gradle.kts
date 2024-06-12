@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization") version "1.9.22"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.15.0-Beta.2"
     `maven-publish`
 }
 
@@ -31,8 +32,8 @@ dependencies {
 }
 
 tasks {
-    test {
-        useJUnitPlatform()
+    apiBuild {
+        inputJar.value(jar.flatMap { it.archiveFile })
     }
 
     withType<AbstractPublishToMaven>().all {
@@ -44,6 +45,10 @@ tasks {
         doLast {
             println("##teamcity[buildStatus text = 'Published qodana-cloud-kotlin-client v${libraryVersion()}']")
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
 
