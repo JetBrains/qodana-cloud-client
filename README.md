@@ -29,14 +29,12 @@ able to request a different version (for example, require v1.5 which has an API 
 Add the following to the `build.gradle.kts`:
 
 ```kotlin
-val qodanaCloudClientVersion = "0.1.2"
-
 repositories {
     maven("https://cache-redirector.jetbrains.com/intellij-dependencies")
 }
 
 dependencies {
-    implementation("org.jetbrains.qodana:qodana-cloud-kotlin-client:$qodanaSarifVersion")
+    implementation("org.jetbrains.qodana:qodana-cloud-kotlin-client:0.1.4")
 }
 ```
 
