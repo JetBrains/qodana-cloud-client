@@ -1,11 +1,8 @@
 package org.jetbrains.qodana.cloudclient
 
 import kotlinx.coroutines.*
-import okhttp3.mockwebserver.MockResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.seconds
 
@@ -13,16 +10,10 @@ class QDCloudEnvironmentTest {
     private val frontend = "qodana.cloud"
 
     private val httpClient = MockQDCloudHttpClient.empty()
+
     private val scope = CoroutineScope(
         SupervisorJob() + Dispatchers.Default + CoroutineName("EnvironmentTest")
     )
-
-    private fun environmentByFrontend(): QDCloudEnvironment {
-        return QDCloudEnvironment(
-            frontendUrl = frontend,
-            httpClient = httpClient
-        )
-    }
 
     @Test
     fun `valid single api version`(): Unit = runBlocking {
@@ -53,7 +44,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend()
+        val environment = QDCloudEnvironment(frontend, httpClient)
 
         val apis = environment.getApis().asSuccess()
 
@@ -99,7 +90,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend()
+        val environment = QDCloudEnvironment(frontend, httpClient)
 
         val apis = environment.getApis().asSuccess()
 
@@ -140,7 +131,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend()
+        val environment = QDCloudEnvironment(frontend, httpClient)
 
         val apis = environment.getApis().asSuccess()
 
@@ -169,7 +160,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend()
+        val environment = QDCloudEnvironment(frontend, httpClient)
 
         val apis = environment.getApis() as? QDCloudResponse.Error.ResponseFailure
 
@@ -184,7 +175,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend()
+        val environment = QDCloudEnvironment(frontend, httpClient)
         val apis = environment.getApis() as? QDCloudResponse.Error.ResponseFailure
 
         assertThat(apis).isNotNull
@@ -220,7 +211,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend().requestOn(scope)
+        val environment = QDCloudEnvironment(frontend, httpClient).requestOn(scope)
 
         val apis1 = environment.getApis().asSuccess()
         assertThat(apis1).isEqualTo(expectedApis)
@@ -261,7 +252,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend().requestOn(scope)
+        val environment = QDCloudEnvironment(frontend, httpClient).requestOn(scope)
 
         coroutineScope {
             launch {
@@ -285,7 +276,7 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        val environment = environmentByFrontend().requestOn(scope)
+        val environment = QDCloudEnvironment(frontend, httpClient).requestOn(scope)
 
         val apis1 = environment.getApis() as? QDCloudResponse.Error.ResponseFailure
 
