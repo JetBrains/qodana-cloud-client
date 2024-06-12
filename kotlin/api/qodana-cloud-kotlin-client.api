@@ -1,3 +1,21 @@
+public abstract interface class org/jetbrains/qodana/cloudclient/MockQDCloudHttpClient : org/jetbrains/qodana/cloudclient/QDCloudHttpClient {
+	public static final field Companion Lorg/jetbrains/qodana/cloudclient/MockQDCloudHttpClient$Companion;
+	public abstract fun getRequestsCount ()I
+	public abstract fun respond (Lkotlin/jvm/functions/Function4;)V
+}
+
+public final class org/jetbrains/qodana/cloudclient/MockQDCloudHttpClient$Companion {
+	public final fun empty ()Lorg/jetbrains/qodana/cloudclient/MockQDCloudHttpClient;
+}
+
+public final class org/jetbrains/qodana/cloudclient/MockQDCloudHttpClient$NotSupportedException : java/lang/Exception {
+	public fun <init> ()V
+}
+
+public final class org/jetbrains/qodana/cloudclient/MockQDCloudHttpClientKt {
+	public static final fun respond (Lorg/jetbrains/qodana/cloudclient/MockQDCloudHttpClient;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)V
+}
+
 public abstract interface class org/jetbrains/qodana/cloudclient/QDCloudClient {
 	public abstract fun getEnvironment ()Lorg/jetbrains/qodana/cloudclient/QDCloudEnvironment;
 	public abstract fun getHttpClient ()Lorg/jetbrains/qodana/cloudclient/QDCloudHttpClient;

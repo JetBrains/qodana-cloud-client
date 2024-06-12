@@ -15,18 +15,6 @@ class QDCloudClientTest {
         return QDCloudEnvironment.Apis.Api("host", major, minor)
     }
 
-    private fun mockQDCloudHttpClient(): QDCloudHttpClient {
-        return object : QDCloudHttpClient {
-            override suspend fun doRequest(
-                host: String,
-                request: QDCloudRequest,
-                token: String?
-            ): QDCloudResponse<String> {
-                error("must not do requests from this test")
-            }
-        }
-    }
-
     @Test
     fun v1_0(): Unit = runBlocking {
         val environment = qdCloudMockEnvironment(
@@ -37,7 +25,7 @@ class QDCloudClientTest {
                 )
             )
         )
-        val client = QDCloudClient(mockQDCloudHttpClient(), environment)
+        val client = QDCloudClient(MockQDCloudHttpClient.empty(), environment)
         val v1 = client.v1().asSuccess()
 
         assertThat(v1).isNotNull
@@ -66,7 +54,7 @@ class QDCloudClientTest {
                 )
             )
         )
-        val client = QDCloudClient(mockQDCloudHttpClient(), environment)
+        val client = QDCloudClient(MockQDCloudHttpClient.empty(), environment)
         val v1 = client.v1().asSuccess()
 
         assertThat(v1).isNotNull
@@ -95,7 +83,7 @@ class QDCloudClientTest {
                 )
             )
         )
-        val client = QDCloudClient(mockQDCloudHttpClient(), environment)
+        val client = QDCloudClient(MockQDCloudHttpClient.empty(), environment)
         val v1 = client.v1().asSuccess()
 
         assertThat(v1).isNotNull
@@ -124,7 +112,7 @@ class QDCloudClientTest {
                 )
             )
         )
-        val client = QDCloudClient(mockQDCloudHttpClient(), environment)
+        val client = QDCloudClient(MockQDCloudHttpClient.empty(), environment)
         val v1 = client.v1().asSuccess()
 
         assertThat(v1).isNotNull
@@ -147,7 +135,7 @@ class QDCloudClientTest {
     fun `404 from environment`(): Unit = runBlocking {
         val environmentResponse = QDCloudResponse.Error.ResponseFailure(QDCloudException.Error("404", 404))
         val environment = qdCloudMockEnvironment(environmentResponse)
-        val client = QDCloudClient(mockQDCloudHttpClient(), environment)
+        val client = QDCloudClient(MockQDCloudHttpClient.empty(), environment)
         val v1 = client.v1() as? QDCloudResponse.Error.ResponseFailure
 
         assertThat(v1).isNotNull
@@ -164,7 +152,7 @@ class QDCloudClientTest {
                 )
             )
         )
-        val client = QDCloudClient(mockQDCloudHttpClient(), environment)
+        val client = QDCloudClient(MockQDCloudHttpClient.empty(), environment)
         val v1 = client.v1() as? QDCloudResponse.Error.ResponseFailure
 
         assertThat(v1).isNotNull

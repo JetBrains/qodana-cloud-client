@@ -2,35 +2,25 @@ package org.jetbrains.qodana.cloudclient
 
 import kotlinx.coroutines.*
 import okhttp3.mockwebserver.MockResponse
-import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.net.http.HttpClient
 import kotlin.time.Duration.Companion.seconds
 
 class QDCloudEnvironmentTest {
-    private val frontend = MockWebServer()
+    private val frontend = "qodana.cloud"
+
+    private val httpClient = MockQDCloudHttpClient.empty()
     private val scope = CoroutineScope(
         SupervisorJob() + Dispatchers.Default + CoroutineName("EnvironmentTest")
     )
 
-    @BeforeEach
-    fun startServer() {
-        frontend.start()
-    }
-
-    @AfterEach
-    fun shutdownServer() {
-        frontend.shutdown()
-    }
-
     private fun environmentByFrontend(): QDCloudEnvironment {
         return QDCloudEnvironment(
-            frontendUrl = frontend.hostPath(),
-            httpClient = QDCloudHttpClient(HttpClient.newHttpClient())
+            frontendUrl = frontend,
+            httpClient = httpClient
         )
     }
 
@@ -57,8 +47,10 @@ class QDCloudEnvironmentTest {
             linters = emptyList()
         )
 
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                frontendVersionsResponse
+            }
         }
 
         val environment = environmentByFrontend()
@@ -101,8 +93,10 @@ class QDCloudEnvironmentTest {
             )
         )
 
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                frontendVersionsResponse
+            }
         }
 
         val environment = environmentByFrontend()
@@ -140,8 +134,10 @@ class QDCloudEnvironmentTest {
             linters = emptyList()
         )
 
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                frontendVersionsResponse
+            }
         }
 
         val environment = environmentByFrontend()
@@ -167,8 +163,10 @@ class QDCloudEnvironmentTest {
             }
         """.trimIndent()
 
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                frontendVersionsResponse
+            }
         }
 
         val environment = environmentByFrontend()
@@ -180,8 +178,10 @@ class QDCloudEnvironmentTest {
 
     @Test
     fun `404 from server`(): Unit = runBlocking {
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(404)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                throw QDCloudException.Error("404", 404)
+            }
         }
 
         val environment = environmentByFrontend()
@@ -214,8 +214,10 @@ class QDCloudEnvironmentTest {
             linters = emptyList()
         )
 
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                frontendVersionsResponse
+            }
         }
 
         val environment = environmentByFrontend().requestOn(scope)
@@ -226,7 +228,7 @@ class QDCloudEnvironmentTest {
         val apis2 = environment.getApis().asSuccess()
         assertThat(apis2).isEqualTo(expectedApis)
 
-        assertThat(frontend.requestCount).isEqualTo(1)
+        assertThat(httpClient.requestsCount).isEqualTo(1)
     }
 
     @Test
@@ -252,11 +254,10 @@ class QDCloudEnvironmentTest {
             linters = emptyList()
         )
 
-        frontend.respond("/api/versions") {
-            runBlocking {
-                // long-running request
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
                 delay(2.seconds)
-                MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+                frontendVersionsResponse
             }
         }
 
@@ -273,13 +274,15 @@ class QDCloudEnvironmentTest {
             }
         }
 
-        assertThat(frontend.requestCount).isEqualTo(1)
+        assertThat(httpClient.requestsCount).isEqualTo(1)
     }
 
     @Test
     fun `caching environment error then success`(): Unit = runBlocking {
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(404)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                throw QDCloudException.Error("404", 404)
+            }
         }
 
         val environment = environmentByFrontend().requestOn(scope)
@@ -310,13 +313,15 @@ class QDCloudEnvironmentTest {
             linters = emptyList()
         )
 
-        frontend.respond("/api/versions") {
-            MockResponse().setResponseCode(200).setBody(frontendVersionsResponse)
+        httpClient.respond(frontend, "api/versions") {
+            qodanaCloudResponse {
+                frontendVersionsResponse
+            }
         }
 
         val apis2 = environment.getApis().asSuccess()
         assertThat(apis2).isEqualTo(expectedApis)
 
-        assertThat(frontend.requestCount).isEqualTo(2)
+        assertThat(httpClient.requestsCount).isEqualTo(2)
     }
 }

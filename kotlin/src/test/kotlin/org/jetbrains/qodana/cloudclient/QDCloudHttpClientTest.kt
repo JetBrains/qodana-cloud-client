@@ -149,3 +149,7 @@ class QDCloudHttpClientTest {
         @SerialName("id") val id: String,
     )
 }
+
+private fun MockWebServer.hostPath(): String {
+    return url("/").toString()
+}
