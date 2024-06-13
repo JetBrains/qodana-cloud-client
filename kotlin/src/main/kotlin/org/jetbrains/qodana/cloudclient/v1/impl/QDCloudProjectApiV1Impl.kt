@@ -36,7 +36,7 @@ internal class QDCloudProjectApiV1Impl(
     ): QDCloudResponse<QDCloudSchema.StartPublishReportData> {
         return request(
             QDCloudRequest(
-                "reports",
+                "reports/",
                 QDCloudRequest.POST(QDCloudJson.encodeToString(request))
             )
         )
@@ -51,7 +51,7 @@ internal class QDCloudProjectApiV1Impl(
         } ?: ""
         return request(
             QDCloudRequest(
-                "reports/$reportId/finish",
+                "reports/$reportId/finish/",
                 QDCloudRequest.POST(body)
             )
         )
