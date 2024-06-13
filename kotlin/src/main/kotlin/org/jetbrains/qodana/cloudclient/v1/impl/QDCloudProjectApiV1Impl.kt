@@ -46,13 +46,11 @@ internal class QDCloudProjectApiV1Impl(
         reportId: String,
         languages: Map<String, Int>?
     ): QDCloudResponse<QDCloudSchema.FinishPublishReportData> {
-        val body = languages?.let {
-            QDCloudJson.encodeToString(mapOf("languages" to languages))
-        } ?: ""
+        val body: Map<String, Map<String, Int>> = languages?.let { mapOf("languages" to languages)} ?: emptyMap()
         return request(
             QDCloudRequest(
                 "reports/$reportId/finish/",
-                QDCloudRequest.POST(body)
+                QDCloudRequest.POST(QDCloudJson.encodeToString(body))
             )
         )
     }
