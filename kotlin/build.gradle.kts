@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm")
+    kotlin("jvm") version "1.9.22"
     kotlin("plugin.serialization") version "1.9.22"
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.15.0-Beta.2"
     `maven-publish`
