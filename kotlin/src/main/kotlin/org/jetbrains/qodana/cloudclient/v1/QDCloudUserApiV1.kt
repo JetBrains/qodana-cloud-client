@@ -61,6 +61,10 @@ interface QDCloudUserApiV1 : QDCloudUserApiV1Versions, QDCloudApiV1Base {
         name: String
     ): QDCloudResponse<QDCloudSchema.Project>
 
+    suspend fun generateProjectToken(projectId: String): QDCloudResponse<QDCloudSchema.ProjectToken>
+
+    suspend fun getProjectToken(projectId: String): QDCloudResponse<QDCloudSchema.ProjectToken>
+
     // API present in >= 1.3 versions
     interface V3 : QDCloudUserApiV1Versions.V3
 

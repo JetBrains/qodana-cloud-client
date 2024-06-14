@@ -148,6 +148,12 @@ class QDCloudSchema private constructor() {
         @SerialName("token") val token: String,
         @SerialName("url") val url: String,
     )
+
+    @Serializable
+    data class ProjectToken(
+        @SerialName("id") val id: String,
+        @SerialName("token") val token: String
+    )
 }
 
 // namespace

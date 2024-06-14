@@ -169,6 +169,24 @@ internal class QDCloudUserApiV1Impl(
         )
     }
 
+    override suspend fun generateProjectToken(projectId: String): QDCloudResponse<QDCloudSchema.ProjectToken> {
+        return request(
+            QDCloudRequest(
+                "projects/$projectId/tokens",
+                QDCloudRequest.POST()
+            )
+        )
+    }
+
+    override suspend fun getProjectToken(projectId: String): QDCloudResponse<QDCloudSchema.ProjectToken> {
+        return request(
+            QDCloudRequest(
+                "projects/$projectId/token",
+                QDCloudRequest.GET
+            )
+        )
+    }
+
     override suspend fun doRequest(request: QDCloudRequest): QDCloudResponse<String> {
         return qodanaCloudResponse {
             val token = tokenProvider.invoke().value()
