@@ -50,7 +50,7 @@ interface QDCloudUserApiV1 : QDCloudUserApiV1Versions, QDCloudApiV1Base {
     suspend fun getReportFiles(
         reportId: String,
         filenames: List<String>
-    ): QDCloudResponse<List<QDCloudSchema.Files>>
+    ): QDCloudResponse<QDCloudSchema.Files>
 
     suspend fun getReportData(
         reportId: String

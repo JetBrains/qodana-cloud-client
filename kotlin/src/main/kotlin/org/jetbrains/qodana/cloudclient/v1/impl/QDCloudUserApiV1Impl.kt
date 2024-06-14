@@ -138,7 +138,7 @@ internal class QDCloudUserApiV1Impl(
     override suspend fun getReportFiles(
         reportId: String,
         filenames: List<String>
-    ): QDCloudResponse<List<QDCloudSchema.Files>> {
+    ): QDCloudResponse<QDCloudSchema.Files> {
         return request(
             QDCloudRequest(
                 "reports/$reportId/files",
