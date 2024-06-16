@@ -825,6 +825,35 @@ public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectInTe
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken {
+	public static final field Companion Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken;
+	public static synthetic fun copy$default (Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getToken ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectToken$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectsByOriginUrl {
 	public static final field Companion Lorg/jetbrains/qodana/cloudclient/v1/QDCloudSchema$ProjectsByOriginUrl$Companion;
 	public fun <init> (Ljava/util/List;)V
@@ -1074,9 +1103,11 @@ public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$UserLicense
 
 public abstract interface class org/jetbrains/qodana/cloudclient/v1/QDCloudUserApiV1 : org/jetbrains/qodana/cloudclient/v1/QDCloudApiV1Base, org/jetbrains/qodana/cloudclient/v1/QDCloudUserApiV1Versions {
 	public abstract fun createProjectInTeam (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun generateProjectToken (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getOrganizations (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getProjectByOriginUrl (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getProjectProperties (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getProjectToken (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getProjectsOfTeam (Ljava/lang/String;Lorg/jetbrains/qodana/cloudclient/v1/QDCloudRequestParameters$Paginated;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getReportData (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getReportFiles (Ljava/lang/String;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
