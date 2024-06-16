@@ -80,7 +80,7 @@ tasks {
     register("publishAndLogStatusToTC") {
         dependsOn("publish")
         doLast {
-            val version = obtainVersionToPublish()
+            val version = getPublishVersionInGradleProperties()
             println("##teamcity[buildStatus text = 'Published qodana-cloud-kotlin-client:${version.semverString()}']")
         }
     }
