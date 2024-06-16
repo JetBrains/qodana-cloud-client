@@ -183,6 +183,7 @@ fun obtainVersionToPublish(): Version {
             }
         }
         isMajorVersionSame -> {
+            @Suppress("LiftReturnOrAssignment")
             when {
                 isMinorVersionIncremented -> {
                     patchVersionToPublish = 0
