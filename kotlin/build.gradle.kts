@@ -67,7 +67,7 @@ tasks {
 
     check {
         doLast("Check that version defined in properties file is valid") {
-            val version = getPublishVersionInGradleProperties()
+            val version = obtainVersionToPublish()
             println("If this version will be published, it will be published as v${version.semverString()}")
         }
     }
