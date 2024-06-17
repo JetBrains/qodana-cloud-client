@@ -46,7 +46,8 @@ internal class QDCloudHttpClientImpl(
             "Qodana Cloud API request path can not contain parent directory references"
         }
 
-        val url = URI(host).resolve(request.path).withParameters(request.parameters)
+        val correctedHost = if (host.endsWith("/")) host else "$host/"
+        val url = URI(correctedHost).resolve(request.path).withParameters(request.parameters)
 
         val requestBuilder = HttpRequest.newBuilder(url)
             .header("Content-Type", "application/json")
