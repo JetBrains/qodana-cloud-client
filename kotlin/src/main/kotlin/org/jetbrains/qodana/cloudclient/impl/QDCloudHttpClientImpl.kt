@@ -38,16 +38,7 @@ internal class QDCloudHttpClientImpl(
         request: QDCloudRequest,
         authToken: String? = null,
     ): HttpRequest {
-        val pathToSanitize = Path(request.path)
-        require(!pathToSanitize.isAbsolute) {
-            "Qodana Cloud API request path must be relative"
-        }
-        require(!pathToSanitize.contains(Path(".."))) {
-            "Qodana Cloud API request path can not contain parent directory references"
-        }
-
-        val correctedHost = if (host.endsWith("/")) host else "$host/"
-        val url = URI(correctedHost).resolve(request.path).withParameters(request.parameters)
+        val url = validateAndBuildRequestUrl(host, request.path, request.parameters)
 
         val requestBuilder = HttpRequest.newBuilder(url)
             .header("Content-Type", "application/json")
@@ -116,32 +107,36 @@ internal class QDCloudHttpClientImpl(
     }
 }
 
-private fun URI.withParameters(parameters: Map<String, String>): URI {
-    var uri = this
-    parameters.forEach { (t, u) ->
-        uri = uri.withParameter(t, u)
-    }
-    return uri
-}
-
-private fun URI.withParameter(paramName: String, paramValue: String): URI {
-    // Encode the parameter name and value to handle special characters
-    val encodedParamName = URLEncoder.encode(paramName, "UTF-8")
-    val encodedParamValue = URLEncoder.encode(paramValue, "UTF-8")
-
-    // Construct the query, test if original query is not null and prepend an '&' if it's not empty
-    val newQuery = (query?.let { "$it&" } ?: "") + "$encodedParamName=$encodedParamValue"
-
-    // Construct the new URI with the updated query
-    return URI(
-        scheme,
-        authority,
-        path,
-        newQuery,  // use the new query string
-        fragment
-    )
-}
-
 private fun String?.asRequestBody(): HttpRequest.BodyPublisher {
     return this?.let { BodyPublishers.ofString(it) } ?: BodyPublishers.noBody()
+}
+
+// there is no adequate API in JDK to work with request parameters
+// You can't use URI(...), because the encoding on your side is still needed,
+// but then URI performs some additional encoding over your encoding
+private fun validateAndBuildRequestUrl(
+    host: String,
+    path: String,
+    parameters: Map<String, String>
+): URI {
+    fun parametersPart(): String {
+        if (parameters.isEmpty()) return ""
+
+        val encoded = parameters.toList().joinToString("&") { (key, value) ->
+            val encodedKey = URLEncoder.encode(key, "UTF-8")
+            val encodedValue = URLEncoder.encode(value, "UTF-8")
+            "$encodedKey=$encodedValue"
+        }
+        return "?$encoded"
+    }
+
+    val pathToSanitize = Path(path)
+    require(!pathToSanitize.isAbsolute) {
+        "Qodana Cloud API request path must be relative"
+    }
+    require(!pathToSanitize.contains(Path(".."))) {
+        "Qodana Cloud API request path can not contain parent directory references"
+    }
+    val correctedHost = if (host.endsWith("/")) host else "$host/"
+    return URI("$correctedHost$path${parametersPart()}")
 }
