@@ -1,5 +1,7 @@
 package org.jetbrains.qodana.cloudclient
 
+import java.util.Objects
+
 @DslMarker
 private annotation class QDCloudResponseBlockDsl
 
@@ -14,14 +16,34 @@ sealed interface QDCloudResponse<out T> {
     sealed interface Error : QDCloudResponse<Nothing> {
         val exception: QDCloudException
 
-        class Offline(override val exception: QDCloudException.Offline) : Error
+        // plugin relies on such hashcode/equals
+        class Offline(override val exception: QDCloudException.Offline) : Error {
+            override fun hashCode(): Int = 0
 
+            override fun equals(other: Any?): Boolean {
+                return other is Offline
+            }
+        }
+
+        // plugin relies on such hashcode/equals
         class ResponseFailure(override val exception: QDCloudException.Error) : Error {
             val errorMessage: String
                 get() = exception.errorMessage
 
             val responseCode: Int?
                 get() = exception.responseCode
+
+
+            override fun hashCode(): Int {
+                return Objects.hash(errorMessage, responseCode)
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (other !is QDCloudException.Error) return false
+
+                return errorMessage == other.errorMessage && responseCode == other.responseCode
+            }
         }
     }
 }

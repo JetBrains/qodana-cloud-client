@@ -183,16 +183,20 @@ public abstract interface class org/jetbrains/qodana/cloudclient/QDCloudResponse
 
 public final class org/jetbrains/qodana/cloudclient/QDCloudResponse$Error$Offline : org/jetbrains/qodana/cloudclient/QDCloudResponse$Error {
 	public fun <init> (Lorg/jetbrains/qodana/cloudclient/QDCloudException$Offline;)V
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getException ()Lorg/jetbrains/qodana/cloudclient/QDCloudException$Offline;
 	public synthetic fun getException ()Lorg/jetbrains/qodana/cloudclient/QDCloudException;
+	public fun hashCode ()I
 }
 
 public final class org/jetbrains/qodana/cloudclient/QDCloudResponse$Error$ResponseFailure : org/jetbrains/qodana/cloudclient/QDCloudResponse$Error {
 	public fun <init> (Lorg/jetbrains/qodana/cloudclient/QDCloudException$Error;)V
+	public fun equals (Ljava/lang/Object;)Z
 	public final fun getErrorMessage ()Ljava/lang/String;
 	public fun getException ()Lorg/jetbrains/qodana/cloudclient/QDCloudException$Error;
 	public synthetic fun getException ()Lorg/jetbrains/qodana/cloudclient/QDCloudException;
 	public final fun getResponseCode ()Ljava/lang/Integer;
+	public fun hashCode ()I
 }
 
 public final class org/jetbrains/qodana/cloudclient/QDCloudResponse$Success : org/jetbrains/qodana/cloudclient/QDCloudResponse {
