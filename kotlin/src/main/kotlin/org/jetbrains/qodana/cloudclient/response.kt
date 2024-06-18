@@ -9,7 +9,7 @@ private annotation class QDCloudResponseBlockDsl
  * Use .value() inside [qodanaCloudResponse] block to safely unwrap the value
  */
 sealed interface QDCloudResponse<out T> {
-    class Success<out T>(val value: T) : QDCloudResponse<T>
+    data class Success<out T>(val value: T) : QDCloudResponse<T>
 
     sealed interface Error : QDCloudResponse<Nothing> {
         val exception: QDCloudException
