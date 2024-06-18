@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.qodana:qodana-cloud-kotlin-client:0.1.7")
+    implementation("org.jetbrains.qodana:qodana-cloud-kotlin-client:0.1.13")
 }
 ```
 
