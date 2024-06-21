@@ -180,7 +180,7 @@ class QDCloudRequestParameters private constructor() {
 
     @Serializable
     data class PublishRequest(
-        @SerialName("type") val type: ReportType,
+        @SerialName("type") val type: ReportType = ReportType.SARIF,
         @SerialName("files") val files: List<ReportFile>,
         @SerialName("analysisId") val analysisId: String,
         @SerialName("tools") val tools: List<String>?,
@@ -191,7 +191,6 @@ class QDCloudRequestParameters private constructor() {
     ) {
         @Serializable
         enum class ReportType {
-            @SerialName("idea") IDEA,
             @SerialName("sarif") SARIF;
         }
 
