@@ -36,3 +36,4 @@ failureConditions:
 
 exclude:
   - name: UnusedSymbol
+  - name: MemberVisibilityCanBePrivate
