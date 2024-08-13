@@ -4,10 +4,12 @@ internal fun main() {
     val qodanaPage = QodanaPage("https://www.jetbrains.com/qodana/")
     val buyPage = qodanaPage.buyUltimatePlus()
 
-    val qodanaFullDiscountCoupon = "xoxp-12345678901-987654321012-987654321012-1234123412341234567890abcdef12345"
+    val qodanaFullDiscountCoupon = System.getenv("QODANA_FULL_DISCOUNT_COUPON")
     buyPage.applyAnnualDiscountForThreeContributors(qodanaFullDiscountCoupon)
     buyPage.fillPaymentDetails()
     val qodanaLicense = buyPage.orderAndPay()
+
+    enjoy(qodanaLicense)
 }
 
 private fun enjoy(qodanaLicense: String) {

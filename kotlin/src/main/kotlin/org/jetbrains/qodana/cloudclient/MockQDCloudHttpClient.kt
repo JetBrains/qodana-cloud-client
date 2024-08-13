@@ -1,7 +1,7 @@
 package org.jetbrains.qodana.cloudclient
-
 import org.jetbrains.annotations.TestOnly
 import org.jetbrains.qodana.cloudclient.impl.MockQDCloudHttpClientImpl
+
 
 typealias MockQDCloudHttpRequestHandler =
         suspend (host: String, request: QDCloudRequest, token: String?) -> QDCloudResponse<String>?
