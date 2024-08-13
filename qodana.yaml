@@ -3,6 +3,8 @@
 #             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
 #-------------------------------------------------------------------------------#
 version: "1.0"
+bootstrap: rm -rf .idea
+
 linter: registry.jetbrains.team/p/sa/containers/qodana-jvm:2024.2-nightly
 projectJDK: 17
 disableSanityInspections: true
