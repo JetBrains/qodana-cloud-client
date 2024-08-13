@@ -8,7 +8,7 @@ fun main() {
     buyPage.applyAnnualDiscountForThreeContributors(qodanaFullDiscountCoupon)
     buyPage.fillPaymentDetails()
     val qodanaLicense = buyPage.orderAndPay()
-    enjoy(qodanaLicense)
+//    enjoy(qodanaLicense)
 }
 
 private fun enjoy(qodanaLicense: String) {
