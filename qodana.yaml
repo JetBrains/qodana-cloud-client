@@ -6,7 +6,6 @@ version: "1.0"
 linter: registry.jetbrains.team/p/sa/containers/qodana-jvm:2024.2-nightly
 projectJDK: 17
 enablePackageSearch: true
-disableSanityInspections: true
 profile:
   name: qodana.recommended
 exclude:
