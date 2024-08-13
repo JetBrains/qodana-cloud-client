@@ -29,6 +29,8 @@ exclude:
 include:
   - name: RunBlocking
   - name: unused
+    paths:
+      - kotlin/src/main/kotlin/org/jetbrains/qodana/cloudclient/examples
 failureConditions:
   severityThresholds:
     any: 0
