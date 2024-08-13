@@ -12,7 +12,6 @@ exclude:
   - name: UnusedSymbol
   - name: MemberVisibilityCanBePrivate
 include:
-  - name: RunBlocking
   - name: UnusedSymbol
     paths:
       - kotlin/src/main/kotlin/org/jetbrains/qodana/cloudclient/examples
