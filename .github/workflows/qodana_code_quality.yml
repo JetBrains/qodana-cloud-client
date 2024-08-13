@@ -23,3 +23,6 @@ jobs:
         uses: JetBrains/qodana-action@v2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        with:
+          use-caches: 'false'
+          pr-mode: 'false'

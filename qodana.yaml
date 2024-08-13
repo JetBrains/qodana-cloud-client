@@ -3,17 +3,16 @@
 #             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
 #-------------------------------------------------------------------------------#
 version: "1.0"
-linter: jetbrains/qodana-jvm:2024.2-eap
+
+linter: registry.jetbrains.team/p/sa/containers/qodana-jvm:2024.2-nightly
 projectJDK: 17
 enablePackageSearch: true
-disableSanityInspections: true
 profile:
   name: qodana.recommended
 exclude:
   - name: UnusedSymbol
   - name: MemberVisibilityCanBePrivate
 include:
-  - name: RunBlocking
   - name: UnusedSymbol
     paths:
       - kotlin/src/main/kotlin/org/jetbrains/qodana/cloudclient/examples
