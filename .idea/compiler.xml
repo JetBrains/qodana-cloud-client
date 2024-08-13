@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="kotlin" target="17" />
+      <module name="kotlin.main" target="17" />
+      <module name="kotlin.test" target="17" />
+      <module name="qodana-cloud-jvm-client" target="11" />
+      <module name="qodana-cloud-jvm-client.main" target="11" />
+      <module name="qodana-cloud-jvm-client.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

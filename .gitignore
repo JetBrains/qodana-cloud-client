@@ -15,6 +15,7 @@
 **/.idea/**/dataSources.xml
 **/.idea/**/dataSources.local.xml
 **/.idea/**/sqlDataSources.xml
+**/.idea/**/uiDesigner.xml
 
 #gradle
 **/.gradle
