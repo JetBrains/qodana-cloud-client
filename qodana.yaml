@@ -28,6 +28,7 @@ exclude:
   - name: MemberVisibilityCanBePrivate
 include:
   - name: RunBlocking
+  - name: unused
 failureConditions:
   severityThresholds:
     any: 0
