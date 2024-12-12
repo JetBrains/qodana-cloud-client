@@ -1112,7 +1112,6 @@ public final class org/jetbrains/qodana/cloudclient/v1/QDCloudSchema$UserLicense
 }
 
 public abstract interface class org/jetbrains/qodana/cloudclient/v1/QDCloudUserApiV1 : org/jetbrains/qodana/cloudclient/v1/QDCloudApiV1Base, org/jetbrains/qodana/cloudclient/v1/QDCloudUserApiV1Versions {
-	public abstract fun createProjectInTeam (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun generateProjectToken (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getOrganizations (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getProjectByOriginUrl (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
