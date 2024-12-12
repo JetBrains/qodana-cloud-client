@@ -56,11 +56,6 @@ interface QDCloudUserApiV1 : QDCloudUserApiV1Versions, QDCloudApiV1Base {
         reportId: String
     ): QDCloudResponse<QDCloudSchema.ReportData>
 
-    suspend fun createProjectInTeam(
-        teamId: String,
-        name: String
-    ): QDCloudResponse<QDCloudSchema.Project>
-
     suspend fun generateProjectToken(projectId: String): QDCloudResponse<QDCloudSchema.ProjectToken>
 
     suspend fun getProjectToken(projectId: String): QDCloudResponse<QDCloudSchema.ProjectToken>

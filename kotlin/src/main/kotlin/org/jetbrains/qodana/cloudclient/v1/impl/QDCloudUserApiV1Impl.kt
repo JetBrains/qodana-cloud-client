@@ -1,10 +1,8 @@
 package org.jetbrains.qodana.cloudclient.v1.impl
 
-import kotlinx.serialization.encodeToString
 import org.jetbrains.qodana.cloudclient.QDCloudHttpClient
 import org.jetbrains.qodana.cloudclient.QDCloudRequest
 import org.jetbrains.qodana.cloudclient.QDCloudResponse
-import org.jetbrains.qodana.cloudclient.impl.QDCloudJson
 import org.jetbrains.qodana.cloudclient.qodanaCloudResponse
 import org.jetbrains.qodana.cloudclient.v1.*
 import java.time.Instant
@@ -153,18 +151,6 @@ internal class QDCloudUserApiV1Impl(
             QDCloudRequest(
                 "reports/$reportId",
                 QDCloudRequest.GET
-            )
-        )
-    }
-
-    override suspend fun createProjectInTeam(
-        teamId: String,
-        name: String
-    ): QDCloudResponse<QDCloudSchema.Project> {
-        return request(
-            QDCloudRequest(
-                "teams/$teamId/projects/",
-                QDCloudRequest.POST(QDCloudJson.encodeToString(mapOf("name" to name)))
             )
         )
     }
